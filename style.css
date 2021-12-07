@@ -6,11 +6,15 @@ body {
 }
 
 h1 {
-font-family: Times, serif;
-color: chocolate
-text size: 15 px;
+  font-family: Times, serif;
+  color: rgb(255, 255, 255);
+  background-color: rgb(247, 193, 193);
+  text-shadow: rgb(122, 122, 122) 4px 3px 0px;
+  text size: 33px;
 }
+
 p {
   font-family: times, serif;
   color: chocolate
+  text size: 15px;
 }
