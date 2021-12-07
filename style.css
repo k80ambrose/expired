@@ -1,9 +1,16 @@
 body {
-  background color: lightpink
+  background: #DBEDFF;
+  background: -moz-linear-gradient(top, #DBEDFF 0%, #4E7CDE 100%);
+  background: -webkit-linear-gradient(top, #DBEDFF 0%, #4E7CDE 100%);
+  background: linear-gradient(to bottom, #DBEDFF 0%, #4E7CDE 100%);
 }
 
 h1 {
 font-family: Times, serif;
 color: chocolate
 text size: 15 px;
+}
+p {
+  font-family: times, serif;
+  color: chocolate
 }
