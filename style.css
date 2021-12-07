@@ -4,7 +4,6 @@ body {
   background: -webkit-linear-gradient(top, #DBEDFF 0%, #4E7CDE 100%);
   background: linear-gradient(to bottom, #DBEDFF 0%, #4E7CDE 100%);
 }
-
 h1 {
   font-family: Helvetica, serif;
   color: #FFFFFF;
@@ -12,8 +11,12 @@ h1 {
   text size: 33px;
 }
 
+h2 {
+  color: green;
+}
+
 p {
   font-family: times, serif;
-  color: chocolate
+  color: black;
   text size: 15px;
 }
