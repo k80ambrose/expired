@@ -4,9 +4,10 @@ body {
   background: -webkit-radial-gradient(center, #C2FFA8 0%, #EB88BA 100%);
   background: radial-gradient(ellipse at center, #C2FFA8 0%, #EB88BA 100%);%);
 }
+
 h1 {
   font-family: Helvetica, serif;
-  color: #FFFFFF;
+  color: #EB88BA;
   text-shadow: 23px 26px 2px rgba(0,0,0,0.6);
   text size: 33px;
 }
