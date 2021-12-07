@@ -1,17 +1,18 @@
 body {
-  background: #DBEDFF;
-  background: -moz-linear-gradient(top, #DBEDFF 0%, #4E7CDE 100%);
-  background: -webkit-linear-gradient(top, #DBEDFF 0%, #4E7CDE 100%);
-  background: linear-gradient(to bottom, #DBEDFF 0%, #4E7CDE 100%);
+  background: #C2FFA8;
+  background: -moz-radial-gradient(center, #C2FFA8 0%, #EB88BA 100%);
+  background: -webkit-radial-gradient(center, #C2FFA8 0%, #EB88BA 100%);
+  background: radial-gradient(ellipse at center, #C2FFA8 0%, #EB88BA 100%);%);
 }
 h1 {
   font-family: Helvetica, serif;
   color: #FFFFFF;
-  text-shadow: 1px 3px 0 #969696, 1px 13px 5px #aba8a8;
+  text-shadow: 23px 26px 2px rgba(0,0,0,0.6);
   text size: 33px;
 }
 
 h2 {
+  font-family: Helvetica, serif;
   color: #FFFFFF;
   text-shadow: 1px 3px 0 #969696, 1px 13px 5px #aba8a8;
   text size: 20px;
