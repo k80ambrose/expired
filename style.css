@@ -6,10 +6,10 @@ body {
 }
 
 h1 {
-  font-family: Times, serif;
-  color: rgb(255, 255, 255);
-  background-color: rgb(247, 193, 193);
-  text-shadow: rgb(122, 122, 122) 4px 3px 0px;
+  font-family: Helvetica, serif;
+  color: #FFFFFF;
+  background: #FFFFFF;
+  text-shadow: 1px 3px 0 #969696, 1px 13px 5px #aba8a8;
   text size: 33px;
 }
 
