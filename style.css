@@ -12,6 +12,13 @@ h1 {
   margin: 12px;
 }
 
+p.outset {
+  border-style: outset;
+}
+
+p.inset {
+  border-style: inset;
+}
 h2 {
   font-family: Helvetica, serif;
   color: rgba(235, 136, 186, 0.4);
