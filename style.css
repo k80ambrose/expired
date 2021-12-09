@@ -37,9 +37,9 @@ body {
 
 h1 {
   font-family: Helvetica, serif;
-  color: green;
-  text-size: 500px;
-  margin: 12px;
+  color: black;
+  text-size: 120px;
+  margin: 10px;
 }
 
 div.outset {
