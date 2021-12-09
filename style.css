@@ -12,6 +12,13 @@ h1 {
   margin: 12px;
 }
 
+div.outset {
+  border-style:outset;
+}
+div.inset {
+  border-style:inset:
+}
+
 p.outset {
   border-style: outset;
 }
