@@ -1,3 +1,7 @@
+html {
+ cursor: url('171044.png'), pointer;	
+}
+
 body {
   background: #C2FFA8;
   background: -moz-radial-gradient(center, #C2FFA8 0%, #EB88BA 100%);
