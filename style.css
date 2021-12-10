@@ -1,6 +1,6 @@
 html {
- cursor: url('171044.png'), auto;	
  cursor: url('171049.png'), pointer;
+ cursor: url('171044.png'), default;	
  cursor: url('171047.png'), progress, wait;	
 }
 
