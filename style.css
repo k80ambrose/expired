@@ -4,6 +4,8 @@ html {
 
 button {
  cursor: pointer;
+ padding: 5px;
+ margin: 5px;
 }
 
 body {
