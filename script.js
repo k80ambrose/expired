@@ -1,261 +1,361 @@
-var colour="random"; 
-var sparkles=70;
+const star = [];
+const star_x = [];
+const star_y = [];
+const star_remaining_ticks = [];
+const tiny = [];
+const tiny_x = [];
+const tiny_y = [];
+const tiny_remaining_ticks = [];
+const sparkles = 250; // total number of stars, same as number of dots
+const sparkle_lifetime = 30; // each star lives for twice this, then turns into a dot that also lives twice this
+const sparkle_distance = 30; // pixels
 
-var x=ox=400;
-var y=oy=300;
-var swide=800;
-var shigh=600;
-var sleft=sdown=0;
-var tiny=new Array();
-var star=new Array();
-var starv=new Array();
-var starx=new Array();
-var stary=new Array();
-var tinyx=new Array();
-var tinyy=new Array();
-var tinyv=new Array();
+// need to cache this because checking document size is slow
+let doc_height;
+let doc_width;
+let sparkles_enabled = null;
 
-colours=new Array('#ff0000','#00ff00','#ffffff','#ff00ff','#ffa500','#ffff00','#00ff00','#ffffff','ff00ff')
+// runs AFTER document.addEventListener("DOMContentLoaded", function () {...});
+window.onload = function () {
 
-n = 10;
-y = 0;
-x = 0;
-n6=(document.getElementById&&!document.all);
-ns=(document.layers);
-ie=(document.all);
-d=(ns||ie)?'document.':'document.getElementById("';
-a=(ns||n6)?'':'all.';
-n6r=(n6)?'")':'';
-s=(ns)?'':'.style';
+    // cache doc size
+    doc_height = document.documentElement.scrollHeight;
+    doc_width = document.documentElement.scrollWidth;
 
-if (ns){
-	for (i = 0; i < n; i++)
-		document.write('<layer name="dots'+i+'" top=0 left=0 width='+i/2+' height='+i/2+' bgcolor=#ff0000></layer>');
+    // start animation loop
+    animate_sparkles();
+    if (sparkles_enabled === null) {
+        sparkle(true);
+    }
+};
+
+// start / stop / toggle the sparkles
+function sparkle(enable = null) {
+    if (enable === null) {
+        sparkles_enabled = !sparkles_enabled;
+    } else {
+        sparkles_enabled = !!enable;
+    }
+
+    if (sparkles_enabled && star.length < sparkles) {
+        sparkle_init();
+    }
 }
 
-if (ie)
-	document.write('<div id="con" style="position:absolute;top:0px;left:0px"><div style="position:relative">');
 
-if (ie||n6){
-	for (i = 0; i < n; i++)
-		document.write('<div id="dots'+i+'" style="position:absolute;top:0px;left:0px;width:'+i/2+'px;height:'+i/2+'px;background:#ff0000;font-size:'+i/2+'"></div>');
+// initialize but only if called
+function sparkle_destroy() {
+
+    let elem;
+    while (tiny.length) {
+        elem = tiny.pop();
+        if (elem) {
+            document.body.removeChild(elem);
+        }
+    }
+
+    while (star.length) {
+        elem = star.pop();
+        if (elem) {
+            document.body.removeChild(elem);
+        }
+    }
 }
 
-if (ie)
-	document.write('</div></div>');
-(ns||n6)?window.captureEvents(Event.MOUSEMOVE):0;
 
-function Mouse(evnt){
+// initialize but only if called
+function sparkle_init() {
 
-	y = (ns||n6)?evnt.pageY+4 - window.pageYOffset:event.y+4;
-	x = (ns||n6)?evnt.pageX+1:event.x+1;
+    // to create one div per star / dot
+    function create_div(height, width) {
+        const div = document.createElement("div");
+        div.style.position = "absolute";
+        div.style.height = height + "px";
+        div.style.width = width + "px";
+        div.style.overflow = "hidden";
+        return (div);
+    }
+
+    // create stars and dots
+    for (let i = 0; i < sparkles; i++) {
+
+        // create div for dot
+        const tiny_div = create_div(3, 3);
+        tiny_div.style.visibility = "hidden";
+        tiny_div.style.zIndex = "999";
+
+        // if there's an existing dot, remove it
+        if (tiny[i]) {
+            document.body.removeChild(tiny[i])
+        }
+
+        // append new dot to document
+        document.body.appendChild(tiny_div);
+        tiny[i] = tiny_div;
+        tiny_remaining_ticks[i] = null;
+
+        // create div for star
+        const star_div = create_div(5, 5);
+        star_div.style.backgroundColor = "transparent";
+        star_div.style.visibility = "hidden";
+        star_div.style.zIndex = "999";
+
+        // create the actual star using two more divs
+        const bar_horiz = create_div(1, 5);
+        const bar_vert = create_div(5, 1);
+        star_div.appendChild(bar_horiz);
+        star_div.appendChild(bar_vert);
+        bar_horiz.style.top = "2px";
+        bar_horiz.style.left = "0px";
+        bar_vert.style.top = "0px";
+        bar_vert.style.left = "2px";
+
+        // if there's an existing star, remove it
+        if (star[i]) {
+            document.body.removeChild(star[i])
+        }
+
+        // append new star to document
+        document.body.appendChild(star_div);
+        star[i] = star_div;
+        star_remaining_ticks[i] = null;
+    }
+
+    // handle resize
+    window.addEventListener('resize', function () {
+
+        // clear everything because I don't want to bother checking which will be out-of-bounds
+        for (let i = 0; i < sparkles; i++) {
+            // clear all stars
+            star_remaining_ticks[i] = null;
+            star[i].style.left = "0px";
+            star[i].style.top = "0px";
+            star[i].style.visibility = "hidden";
+
+            // clear all dots
+            tiny_remaining_ticks[i] = null;
+            tiny[i].style.top = '0px';
+            tiny[i].style.left = '0px';
+            tiny[i].style.visibility = "hidden";
+        }
+
+        // reset cached height last
+        doc_height = document.documentElement.scrollHeight;
+        doc_width = document.documentElement.scrollWidth;
+    });
+
+    // when the mouse is moved, create stars where the pointer is and where the pointer PROBABLY was
+    document.onmousemove = function (e) {
+        if (sparkles_enabled && !e.buttons) {  // allow more sparkles the faster the mouse moves
+
+            const distance = Math.sqrt(Math.pow(e.movementX, 2) + Math.pow(e.movementY, 2));
+            const delta_x = e.movementX * sparkle_distance * 2 / distance;
+            const delta_y = e.movementY * sparkle_distance * 2 / distance;
+            const probability = distance / sparkle_distance;
+            let cumulative_x = 0;
+
+            // where to make the star: where the moise pointer is for now
+            let mouse_y = e.pageY;
+            let mouse_x = e.pageX;
+
+            // create a star and move back until we reach where the mouse was before
+            while (Math.abs(cumulative_x) < Math.abs(e.movementX)) {
+                create_star(mouse_x, mouse_y, probability);
+
+                let delta = Math.random();
+                mouse_x -= delta_x * delta;
+                mouse_y -= delta_y * delta;
+                cumulative_x += delta_x * delta;
+            }
+        }
+    };
 }
 
-(ns)?window.onMouseMove=Mouse:document.onmousemove=Mouse;
+// animation loop
+function animate_sparkles(fps = 60) {
+    const interval_milliseconds = 1000 / fps;
 
-function animate(){
+    let alive = 0;
 
-	o=(ns||n6)?window.pageYOffset:0;
+    for (let i = 0; i < star.length; i++) {
+        alive += update_star(i);
+    }
 
-	if (ie)con.style.top=document.body.scrollTop + 'px';
+    for (let i = 0; i < tiny.length; i++) {
+        alive += update_tiny(i);
+    }
 
-	for (i = 0; i < n; i++){
+    if (alive === 0 && !sparkles_enabled) {
+        sparkle_destroy();
+    }
 
-		var temp1 = eval(d+a+"dots"+i+n6r+s);
-
-		randcolours = colours[Math.floor(Math.random()*colours.length)];
-
-		(ns)?temp1.bgColor = randcolours:temp1.background = randcolours; 
-
-		if (i < n-1){
-
-			var temp2 = eval(d+a+"dots"+(i+1)+n6r+s);
-			temp1.top = parseInt(temp2.top) + 'px';
-			temp1.left = parseInt(temp2.left) + 'px';
-
-		} 
-		else{
-
-			temp1.top = y+o + 'px';
-			temp1.left = x + 'px';
-		}
-	}
-
-	setTimeout("animate()",10);
+    setTimeout("animate_sparkles(" + fps + ")", interval_milliseconds);
 }
 
-animate();
+// create a new star at some location
+function create_star(x, y, probability = 1.0) {
 
-window.onload=function() { if (document.getElementById) {
-	var i, rats, rlef, rdow;
-	for (var i=0; i<sparkles; i++) {
-		var rats=createDiv(3, 3);
-		rats.style.visibility="hidden";
-		rats.style.zIndex="999";
-		document.body.appendChild(tiny[i]=rats);
-		starv[i]=0;
-		tinyv[i]=0;
-		var rats=createDiv(5, 5);
-		rats.style.backgroundColor="transparent";
-		rats.style.visibility="hidden";
-		rats.style.zIndex="999";
-		var rlef=createDiv(1, 5);
-		var rdow=createDiv(5, 1);
-		rats.appendChild(rlef);
-		rats.appendChild(rdow);
-		rlef.style.top="2px";
-		rlef.style.left="0px";
-		rdow.style.top="0px";
-		rdow.style.left="2px";
-		document.body.appendChild(star[i]=rats);
-	}
-	set_width();
-	sparkle();
-}}
+    // don't create star if it's out of bounds
+    if (x + 5 >= doc_width || y + 5 >= doc_height) {
+        return;
+    }
 
-function sparkle() {
-	var c;
-	if (Math.abs(x-ox)>1 || Math.abs(y-oy)>1) {
-		ox=x;
-		oy=y;
-		for (c=0; c<sparkles; c++) if (!starv[c]) {
-			star[c].style.left=(starx[c]=x)+"px";
-			star[c].style.top=(stary[c]=y+1)+"px";
-			star[c].style.clip="rect(0px, 5px, 5px, 0px)";
-			star[c].childNodes[0].style.backgroundColor=star[c].childNodes[1].style.backgroundColor=(colour=="random")?newColour():colour;
-			star[c].style.visibility="visible";
-			starv[c]=50;
-			break;
-		}
-	}
-	for (c=0; c<sparkles; c++) {
-		if (starv[c]) update_star(c);
-		if (tinyv[c]) update_tiny(c);
-	}
-	setTimeout("sparkle()", 40);
+    // if it's probablistic, give it a chance to do nothing
+    if (Math.random() > probability) {
+        return;
+    }
+
+    // get a color (for the star)
+    function get_random_color() {
+
+        let c = [];
+        c[0] = 255;
+        c[1] = Math.floor(Math.random() * 256);
+        c[2] = Math.floor(Math.random() * (256 - c[1] / 2));
+        c.sort(function () {
+            return (0.5 - Math.random());
+        });
+        return ("rgb(" + c[0] + ", " + c[1] + ", " + c[2] + ")");
+    }
+
+    // which star index do we want to use (either a blank index, or the star closest to dying)
+    let min_lifetime = sparkle_lifetime * 2 + 1;
+    let min_index = NaN;
+    for (let i = 0; i < sparkles; i++) {
+        if (!star_remaining_ticks[i]) {
+            min_lifetime = null;
+            min_index = i;
+            break;
+        } else if (star_remaining_ticks[i] < min_lifetime) {
+            min_lifetime = star_remaining_ticks[i];
+            min_index = i;
+        }
+    }
+
+    // convert existing star to dot before we reuse it
+    if (min_lifetime) {
+        star_to_tiny(min_index);
+    }
+
+    // create a new star
+    if (min_index >= 0) {
+        star_remaining_ticks[min_index] = sparkle_lifetime * 2;
+        star_x[min_index] = x;
+        star[min_index].style.left = x + "px";
+        star_y[min_index] = y;
+        star[min_index].style.top = y + "px";
+        star[min_index].style.clip = "rect(0px, 5px, 5px, 0px)";
+        star[min_index].childNodes[0].style.backgroundColor =
+            star[min_index].childNodes[1].style.backgroundColor = get_random_color();
+        star[min_index].style.visibility = "visible";
+        return min_index
+    }
+
 }
 
+// update one star
 function update_star(i) {
-	if (--starv[i]==25) star[i].style.clip="rect(1px, 4px, 4px, 1px)";
-	if (starv[i]) {
-		stary[i]+=1+Math.random()*3;
-		starx[i]+=(i%5-2)/5;
-		if (stary[i]<shigh+sdown) {
-			star[i].style.top=stary[i]+"px";
-			star[i].style.left=starx[i]+"px";
-		}
-		else {
-			star[i].style.visibility="hidden";
-			starv[i]=0;
-			return;
-		}
-	}
-	else {
-		tinyv[i]=50;
-		tiny[i].style.top=(tinyy[i]=stary[i])+"px";
-		tiny[i].style.left=(tinyx[i]=starx[i])+"px";
-		tiny[i].style.width="2px";
-		tiny[i].style.height="2px";
-		tiny[i].style.backgroundColor=star[i].childNodes[0].style.backgroundColor;
-		star[i].style.visibility="hidden";
-		tiny[i].style.visibility="visible"
-	}
+    // if star doesn't exist, exit early
+    if (star_remaining_ticks[i] === null) {
+        return false;
+    }
+
+    // tick the lifetime of the star
+    star_remaining_ticks[i] -= 1;
+
+    // star is dead?
+    if (star_remaining_ticks[i] === 0) {
+        star_to_tiny(i);
+        return false;
+    }
+
+    // star is only half-alive, shrink it
+    if (star_remaining_ticks[i] === sparkle_lifetime) {
+        star[i].style.clip = "rect(1px, 4px, 4px, 1px)"
+    }
+
+    // move the star
+    if (star_remaining_ticks[i] > 0) {
+        star_y[i] += 1 + 3 * Math.random();
+        star_x[i] += (i % 5 - 2) / 5;
+
+        // only move star if it's in-bounds, otherwise, kill it below
+        if (star_y[i] + 5 < doc_height && star_x[i] + 5 < doc_width) {
+            star[i].style.top = star_y[i] + "px";
+            star[i].style.left = star_x[i] + "px";
+            return true;
+        }
+    }
+
+    // kill the star
+    star_remaining_ticks[i] = null;
+    star[i].style.left = "0px";
+    star[i].style.top = "0px";
+    star[i].style.visibility = "hidden";
+    return false;
 }
 
+// convert star to dot
+function star_to_tiny(i) {
+    // star is dead
+    if (star_remaining_ticks[i] === null) {
+        return;
+    }
+
+    // star is in-bounds, create dot
+    if (star_y[i] + 3 < doc_height && star_x[i] + 3 < doc_width) {
+        tiny_remaining_ticks[i] = sparkle_lifetime * 2;
+        tiny_y[i] = star_y[i];
+        tiny[i].style.top = star_y[i] + "px";
+        tiny_x[i] = star_x[i];
+        tiny[i].style.left = star_x[i] + "px";
+        tiny[i].style.width = "2px";
+        tiny[i].style.height = "2px";
+        tiny[i].style.backgroundColor = star[i].childNodes[0].style.backgroundColor;
+        star[i].style.visibility = "hidden";
+        tiny[i].style.visibility = "visible";
+    }
+
+    // remove star
+    star_remaining_ticks[i] = null;
+    star[i].style.left = "0px";
+    star[i].style.top = "0px";
+    star[i].style.visibility = "hidden";
+}
+
+// update one dot
 function update_tiny(i) {
-	if (--tinyv[i]==25) {
-		tiny[i].style.width="1px";
-		tiny[i].style.height="1px";
-	}
-	if (tinyv[i]) {
-		tinyy[i]+=1+Math.random()*3;
-		tinyx[i]+=(i%5-2)/5;
-		if (tinyy[i]<shigh+sdown) {
-			tiny[i].style.top=tinyy[i]+"px";
-			tiny[i].style.left=tinyx[i]+"px";
-		}
-		else {
-			tiny[i].style.visibility="hidden";
-			tinyv[i]=0;
-			return;
-		}
-	}
-	else tiny[i].style.visibility="hidden";
-}
+    // dot is dead
+    if (tiny_remaining_ticks[i] === null) {
+        return false;
+    }
 
-document.onmousemove=mouse;
-function mouse(e) {
-	if (e) {
-		y=e.pageY;
-		x=e.pageX;
-	}
-	else {
-		set_scroll();
-		y=event.y+sdown;
-		x=event.x+sleft;
-	}
-}
+    // tick dot lifetime
+    tiny_remaining_ticks[i] -= 1;
 
-window.onscroll=set_scroll;
-function set_scroll() {
-	if (typeof(self.pageYOffset)=='number') {
-		sdown=self.pageYOffset;
-		sleft=self.pageXOffset;
-	}
-	else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
-		sdown=document.body.scrollTop;
-		sleft=document.body.scrollLeft;
-	}
-	else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
-		sleft=document.documentElement.scrollLeft;
-		sdown=document.documentElement.scrollTop;
-	}
-	else {
-		sdown=0;
-		sleft=0;
-	}
-}
+    // dot is half-dead, shrink it
+    if (tiny_remaining_ticks[i] === sparkle_lifetime) {
+        tiny[i].style.width = "1px";
+        tiny[i].style.height = "1px";
+    }
 
-window.onresize=set_width;
-function set_width() {
-	var sw_min=999999;
-	var sh_min=999999;
-	if (document.documentElement && document.documentElement.clientWidth) {
-		if (document.documentElement.clientWidth>0) sw_min=document.documentElement.clientWidth;
-		if (document.documentElement.clientHeight>0) sh_min=document.documentElement.clientHeight;
-	}
-	if (typeof(self.innerWidth)=='number' && self.innerWidth) {
-		if (self.innerWidth>0 && self.innerWidth<sw_min) sw_min=self.innerWidth;
-		if (self.innerHeight>0 && self.innerHeight<sh_min) sh_min=self.innerHeight;
-	}
-	if (document.body.clientWidth) {
-		if (document.body.clientWidth>0 && document.body.clientWidth<sw_min) sw_min=document.body.clientWidth;
-		if (document.body.clientHeight>0 && document.body.clientHeight<sh_min) sh_min=document.body.clientHeight;
-	}
-	if (sw_min==999999 || sh_min==999999) {
-		sw_min=800;
-		sh_min=600;
-	}
-	swide=sw_min;
-	shigh=sh_min;
-}
+    // move the dot
+    if (tiny_remaining_ticks[i] > 0) {
+        tiny_y[i] += 1 + 2 * Math.random();
+        tiny_x[i] += (i % 4 - 2) / 4;
 
-function createDiv(height, width) {
-	var div=document.createElement("div");
-	div.style.position="absolute";
-	div.style.height=height+"px";
-	div.style.width=width+"px";
-	div.style.overflow="hidden";
-	return (div);
-}
+        // only allow move if dot is still in-bounds, else kill the dot (below)
+        if (tiny_y[i] + 3 < doc_height && tiny_x[i] + 3 < doc_width) {
+            tiny[i].style.top = tiny_y[i] + "px";
+            tiny[i].style.left = tiny_x[i] + "px";
+            return true
+        }
+    }
 
-function newColour() {
-	var c=new Array();
-	c[0]=255;
-	c[1]=Math.floor(Math.random()*256);
-	c[2]=Math.floor(Math.random()*(256-c[1]/2));
-	c.sort(function(){return (0.5 - Math.random());});
-	return ("rgb("+c[0]+", "+c[1]+", "+c[2]+")");
+    // dot is dead
+    tiny_remaining_ticks[i] = null;
+    tiny[i].style.top = '0px';
+    tiny[i].style.left = '0px';
+    tiny[i].style.visibility = "hidden";
+    return false
 }
-// ]]>
-
