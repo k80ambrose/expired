@@ -1,5 +1,5 @@
 html {
- cursor: crosshair;
+ cursor: auto;
 }
 
 body {
@@ -28,7 +28,6 @@ p {
 }
 
 button {
- cursor: pointer;
  padding: 5px;
  margin: 2px;
 }
