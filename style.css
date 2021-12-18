@@ -1,12 +1,11 @@
 html {
- cursor: url('171049.png'), pointer, auto;
- cursor: url('171044.png'), default;	
- cursor: url('171047.png'), progress, wait;	
+ cursor: url('19192.png'), auto;
 }
 
 button {
- cursor: url('171049.png'), pointer;
+ cursor: pointer;
 }
+
 body {
   background: #C2FFA8;
   background: -moz-radial-gradient(center, #C2FFA8 0%, #EB88BA 100%);
@@ -21,20 +20,6 @@ h1 {
   margin: 10px;
 }
 
-div.outset {
-  border-style:outset;
-}
-div.inset {
-  border-style:inset:
-}
-
-p.outset {
-  border-style: outset;
-}
-
-p.inset {
-  border-style: inset;
-}
 
 h2 {
   font-family: Helvetica, serif;
