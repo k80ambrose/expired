@@ -2,29 +2,22 @@ html {
  cursor: crosshair;
 }
 
-button {
- cursor: pointer;
- padding: 5px;
- margin: 5px;
-}
-
 body {
   background: #C9DBDB;
   background: -moz-linear-gradient(45deg, #C9DBDB 0%, #FFFFFF 100%);
   background: -webkit-linear-gradient(45deg, #C9DBDB 0%, #FFFFFF 100%);
   background: linear-gradient(45deg, #C9DBDB 0%, #FFFFFF 100%);
+  font-family: helvetica, serif;
 }
 
 h1 {
-  font-family: Helvetica, serif;
   color: black;
-  text-size: 120px;
+  text-size: 50px;
   margin: 10px;
 }
 
 
 h2 {
-  font-family: Helvetica, serif;
   color: red;
   text-size: 23px;
 }
@@ -35,16 +28,9 @@ p {
   text-size: 15px;
 }
 
-#footer {
-    width: 100%;
-    color: white;
+button {
+ cursor: pointer;
+ padding: 5px;
+ margin: 2px;
 }
 
-#footer-text{
-    margin: auto;
-    color: white;
-    width: 300px;
-    text-align: center;
-    margin-top: 20px;
-    margin-bottom: 40px;
-}
