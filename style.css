@@ -1,3 +1,7 @@
+html {
+  cursor: zoom-in;
+}
+
 body {
   background: #C9DBDB;
   background: -moz-linear-gradient(45deg, #C9DBDB 0%, #FFFFFF 100%);
@@ -13,7 +17,7 @@ h1 {
 }
 
 h2 {
-  color: orange;
+  color: white;
   text-size: 23px;
 }
 
