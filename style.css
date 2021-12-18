@@ -14,36 +14,6 @@ body {
   background: radial-gradient(ellipse at center, #C2FFA8 0%, #EB88BA 100%);%);
 }
 
-#header-container{
-    margin: auto;
-    margin-top: 20px;
-    margin-bottom: 40px;
-    padding: 40px;
-    border: 2px solid #000000;
-    border-radius: 10px;
-    background-color: white;
-}
-
-#header-container{
-    margin: auto;
-    margin-top: 20px;
-    margin-bottom: 40px;
-    padding: 40px;
-    border: 2px solid #000000;
-    border-radius: 10px;
-    background-color: white;
-}
-
-#container {
-    position:relative; 
-    align-items:stretch;
-    width:100%;
-    display: flex;
-    flex-flow: row wrap;
-
-    height: 100%;
-}
-
 h1 {
   font-family: Helvetica, serif;
   color: black;
