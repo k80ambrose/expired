@@ -7,10 +7,10 @@ button {
 }
 
 body {
-  background: #C2FFA8;
-  background: -moz-radial-gradient(center, #C2FFA8 0%, #EB88BA 100%);
-  background: -webkit-radial-gradient(center, #C2FFA8 0%, #EB88BA 100%);
-  background: radial-gradient(ellipse at center, #C2FFA8 0%, #EB88BA 100%);%);
+  background: #C9DBDB;
+  background: -moz-linear-gradient(45deg, #C9DBDB 0%, #FFFFFF 100%);
+  background: -webkit-linear-gradient(45deg, #C9DBDB 0%, #FFFFFF 100%);
+  background: linear-gradient(45deg, #C9DBDB 0%, #FFFFFF 100%);
 }
 
 h1 {
