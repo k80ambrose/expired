@@ -12,7 +12,8 @@ const sparkle_distance = 30; // pixels
 
 // need to cache this because checking document size is slow
 let doc_height;
-let doc_width;
+let doc_
+;
 let sparkles_enabled = null;
 
 // runs AFTER document.addEventListener("DOMContentLoaded", function () {...});
@@ -105,10 +106,10 @@ function sparkle_init() {
         const bar_vert = create_div(5, 1);
         star_div.appendChild(bar_horiz);
         star_div.appendChild(bar_vert);
-        bar_horiz.style.top = "2px";
-        bar_horiz.style.left = "0px";
-        bar_vert.style.top = "0px";
-        bar_vert.style.left = "2px";
+        bar_horiz.style.top = "5px";
+        bar_horiz.style.left = "5px";
+        bar_vert.style.top = "5px";
+        bar_vert.style.left = "5px";
 
         // if there's an existing star, remove it
         if (star[i]) {
@@ -271,7 +272,7 @@ function update_star(i) {
 
     // star is only half-alive, shrink it
     if (star_remaining_ticks[i] === sparkle_lifetime) {
-        star[i].style.clip = "rect(1px, 4px, 4px, 1px)"
+        star[i].style.clip = "rect(1px, 4px, 4px, 7px)"
     }
 
     // move the star
@@ -309,10 +310,10 @@ function star_to_tiny(i) {
         tiny[i].style.top = star_y[i] + "px";
         tiny_x[i] = star_x[i];
         tiny[i].style.left = star_x[i] + "px";
-        tiny[i].style.width = "10px";
-        tiny[i].style.height = "10px";
+        tiny[i].style.width = "5px";
+        tiny[i].style.height = "16px";
         tiny[i].style.backgroundColor = star[i].childNodes[0].style.backgroundColor;
-        star[i].style.visibility = "hidden";
+        star[i].style.visibility = "visible";
         tiny[i].style.visibility = "visible";
     }
 
