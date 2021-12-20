@@ -215,7 +215,7 @@ function create_star(x, y, probability = 1.0) {
         c.sort(function () {
             return (0.5 - Math.random());
         });
-        return ("rgb(" + c[0] + ", " + c[1] + ", " + c[2] + ")");
+        return ("rgb(" + c[1] + ", " + c[0] + ", " + c[2] + ")");
     }
 
     // which star index do we want to use (either a blank index, or the star closest to dying)
@@ -309,8 +309,8 @@ function star_to_tiny(i) {
         tiny[i].style.top = star_y[i] + "px";
         tiny_x[i] = star_x[i];
         tiny[i].style.left = star_x[i] + "px";
-        tiny[i].style.width = "2px";
-        tiny[i].style.height = "2px";
+        tiny[i].style.width = "10px";
+        tiny[i].style.height = "10px";
         tiny[i].style.backgroundColor = star[i].childNodes[0].style.backgroundColor;
         star[i].style.visibility = "hidden";
         tiny[i].style.visibility = "visible";
