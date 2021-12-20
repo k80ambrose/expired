@@ -27,12 +27,6 @@ p {
   text-size: 15px;
 }
 
-#groovyoutline {
-  outline: 7px ridge rgba(255,255,255,0.65);
-  outline-offset: 13px;
-  padding:2px;
-  margin:3px;
-}
 
 button {
  padding: 5px;
