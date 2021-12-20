@@ -27,7 +27,7 @@ p {
   text-size: 15px;
 }
 
-#groovyborder {
+#groovyoutline {
 outline: 7px ridge rgba(255,255,255,0.65);
 outline-offset: 13px;
 }
