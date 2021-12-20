@@ -1,3 +1,4 @@
+new ghostCursor();
 function ghostCursor(options) {
   let hasWrapperEl = options && options.element
   let element = hasWrapperEl || document.body
