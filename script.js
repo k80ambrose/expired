@@ -240,11 +240,11 @@ function create_star(x, y, probability = 1.0) {
 
     // create a new star
     if (min_index >= 0) {
-        star_remaining_ticks[min_index] = sparkle_lifetime * 2;
+        star_remaining_ticks[min_index] = sparkle_lifetime * 5;
         star_x[min_index] = x;
-        star[min_index].style.left = x + "px";
+        star[min_index].style.left = x + "3px";
         star_y[min_index] = y;
-        star[min_index].style.top = y + "px";
+        star[min_index].style.top = y + "5px";
         star[min_index].style.clip = "rect(0px, 5px, 5px, 0px)";
         star[min_index].childNodes[0].style.backgroundColor =
             star[min_index].childNodes[1].style.backgroundColor = get_random_color();
