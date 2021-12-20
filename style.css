@@ -27,6 +27,11 @@ p {
   text-size: 15px;
 }
 
+#groovyborder {
+outline: 7px ridge rgba(255,255,255,0.65);
+outline-offset: 13px;
+}
+
 button {
  padding: 5px;
  margin: 2px;
