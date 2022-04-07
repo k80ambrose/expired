@@ -60,7 +60,8 @@ button {
   }
 
   button:hover {
-    text-decoration: none;
+    background-color: goldenrod;
+    color: black;
   }
 
   button:active {
