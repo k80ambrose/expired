@@ -6,9 +6,9 @@ const tiny = [];
 const tiny_x = [];
 const tiny_y = [];
 const tiny_remaining_ticks = [];
-const sparkles = 100; // total number of stars, same as number of dots
-const sparkle_lifetime = 50; // each star lives for twice this, then turns into a dot that also lives twice this
-const sparkle_distance = 30; // pixels
+const sparkles = 99; // total number of stars, same as number of dots
+const sparkle_lifetime = 70; // each star lives for twice this, then turns into a dot that also lives twice this
+const sparkle_distance = 5; // pixels
 
 // need to cache this because checking document size is slow
 let doc_height;
@@ -173,7 +173,7 @@ function sparkle_init() {
 
 // animation loop
 function animate_sparkles(fps = 60) {
-    const interval_milliseconds = 1000 / fps;
+    const interval_milliseconds = 1300 / fps;
 
     let alive = 0;
 
@@ -210,7 +210,7 @@ function create_star(x, y, probability = 1.0) {
 
         let c = [];
         c[0] = 255;
-        c[1] = Math.floor(Math.random() * 256);
+        c[1] = Math.floor(Math.random() * 500);
         c[2] = Math.floor(Math.random() * (256 - c[1] / 2));
         c.sort(function () {
             return (0.5 - Math.random());
