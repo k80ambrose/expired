@@ -8,6 +8,11 @@ body {
   background: -webkit-linear-gradient(45deg, #C9DBDB 0%, #FFFFFF 100%);
   background: linear-gradient(45deg, #C9DBDB 0%, #FFFFFF 100%);
   font-family: helvetica, serif;
+  text-align: center;
+}
+
+.photoscroll {
+  margin: 30px;
 }
 
 h1 {
@@ -18,13 +23,13 @@ h1 {
 
 h2 {
   color: white;
-  text-size: 23px;
+  font-size: 23px;
 }
 
 p {
   font-family: helvetica, serif;
   color: black;
-  text-size: 15px;
+  font-size: 15px;
 }
 
 
@@ -79,4 +84,4 @@ button {
       padding: 12px 50px;
     }
   }
-}
+
