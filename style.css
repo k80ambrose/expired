@@ -3,16 +3,28 @@ html {
 }
 
 body {
-  background: #C9DBDB;
-  background: -moz-linear-gradient(45deg, #C9DBDB 0%, #FFFFFF 100%);
-  background: -webkit-linear-gradient(45deg, #C9DBDB 0%, #FFFFFF 100%);
-  background: linear-gradient(45deg, #C9DBDB 0%, #FFFFFF 100%);
-  font-family: helvetica, serif;
-  text-align: center;
+	background: linear-gradient(-187deg,#EAE0CC, #C9ADA1,#A0A083, #798478,#4D6A6D);
+	background-size: 400% 400%;
+	animation: gradient 20s ease infinite;
+	height: 110vh;
 }
 
-.photoscroll {
-  margin: 30px;
+@keyframes gradient {
+	0% {
+		background-position: 100% 0%;
+	}
+	25% {
+		background-position: 50% 50%;
+	}
+  50% {
+		background-position: 0% 100%;
+	}
+  75% {
+		background-position: 50% 50%;
+	}
+	100% {
+		background-position: 100% 0%;
+  }
 }
 
 h1 {
@@ -58,6 +70,7 @@ button {
     -webkit-user-select: none;
     vertical-align: middle;
     white-space: nowrap;
+    z-index: 5;
   }
 
   button:focus {
