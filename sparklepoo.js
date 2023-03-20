@@ -215,7 +215,7 @@ function create_star(x, y, probability = 1.0) {
         c.sort(function () {
             return (0.5 - Math.random());
         });
-        return ("rgb(" + c[0] + ", " + c[0] + ", " + c[0] + ")");
+        return ("rgb(" + c[0] + ", " + c[1] + ", " + c[2] + ")");
     }
 
     // which star index do we want to use (either a blank index, or the star closest to dying)
